@@ -4,7 +4,7 @@ import stripe from "src/lib/stripe";
 import { Product } from "use-shopping-cart/core";
 import { validateCartItems } from "use-shopping-cart/utilities";
 
-export async function POST(request: NextResponse) {
+export async function POST(request: NextRequest) {
 
   const cartDetails = await request.json();
   const baseURL = request.headers.get('origin');
