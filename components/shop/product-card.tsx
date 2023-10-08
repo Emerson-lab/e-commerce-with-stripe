@@ -47,7 +47,12 @@ export default function ProductCard({
       <CardFooter className="flex items-center justify-between">
         <div>
           <p>Preço</p>
-          <p>{price}</p>
+          <p>
+            {Number(price).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL'
+            })}
+          </p>
         </div>
         <Button size={'lg'} variant={'default'} onClick={addToCart}>
           Comprar Agora
