@@ -8,20 +8,35 @@ import {
   CardHeader,
   CardTitle,
 } from "src/components/ui/card"
+import Image from "next/image"
 import { Button } from "../ui/button"
 import { ProductData } from "src/types"
-import Image from "next/image"
-
+import { useToast } from "../ui/use-toast"
+import { formatCurrencyString, useShoppingCart } from 'use-shopping-cart'
 
 export default function ProductCard({
   name,
   image,
   description,
-  price
+  price,
+  id,
+  currency
 }: ProductData) {
 
-  async function addToCart() {
+  const { toast } = useToast();
+  const { addItem } = useShoppingCart();
+  const fomattedPrice = formatCurrencyString({
+    value: +price,
+    currency: 'BRL'
+  })
 
+  async function addToCart(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    addItem({ name, description, id, currency, price: Number(price), image });
+    toast({
+      title: `${name} Adicionado`,
+      description: "Adicione mais por descontos."
+    })
   }
 
   return (
@@ -48,14 +63,11 @@ export default function ProductCard({
         <div>
           <p>Preço</p>
           <p>
-            {Number(price).toLocaleString('pt-BR', {
-              style: 'currency',
-              currency: 'BRL'
-            })}
+            {fomattedPrice}
           </p>
         </div>
         <Button size={'lg'} variant={'default'} onClick={addToCart}>
-          Comprar Agora
+          Comprar
         </Button>
       </CardFooter>
     </Card>

@@ -1,9 +1,10 @@
 import './globals.css'
+import { cn } from 'src/lib/utils'
 import type { Metadata } from 'next'
 import { Oxygen } from 'next/font/google'
 import Header from 'src/components/layout/header'
+import { Toaster } from 'src/components/ui/toaster'
 import AppCartProvider from 'src/components/shop/app-cart-provider'
-import { cn } from 'src/lib/utils'
 
 const oxygen = Oxygen({ weight: ["300", "400", "700"], subsets: ['latin'] })
 
@@ -25,6 +26,7 @@ export default function RootLayout({
           <main className='flex-grow'>
             {children}
           </main>
+          <Toaster />
         </AppCartProvider>
       </body>
     </html>
