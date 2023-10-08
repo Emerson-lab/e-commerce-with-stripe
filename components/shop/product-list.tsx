@@ -29,9 +29,11 @@ async function getProducts() {
 export default async function ProducList() {
   const products = await getProducts();
   return (
-    <section className='grid gap-4 m-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+    <section
+      className='grid gap-4 m-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+    >
       {products?.map(product => (
-        <ProductCard key={product.id} {...product} />
+        <ProductCard key={product.name} {...product} />
       ))}
     </section>
   )

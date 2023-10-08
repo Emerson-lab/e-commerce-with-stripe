@@ -32,7 +32,7 @@ async function seedDummyDate() {
 }
 
 export default async function Seed() {
-  await seedDummyDate()
+  // await seedDummyDate()
   return (
     <>seed</>
   )
