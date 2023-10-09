@@ -35,10 +35,7 @@ export default async function Seed() {
   await seedDummyData();
   return (
     <div className="containe flex items-center justify-center my-10">
-      <h1 className="text-3xl text-green-600 font-extrabold">
-        Dummy data created in your Stripe Inventory. If you don't see it on your
-        Products Dashboard. Take a look at you console.log
-      </h1>
+    
     </div>
   );
 }
