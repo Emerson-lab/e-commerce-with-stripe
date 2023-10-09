@@ -1,122 +1,97 @@
-'use client'
-
-import { useState } from 'react'
-import { useShoppingCart } from 'use-shopping-cart'
+"use client";
+import { useShoppingCart } from "use-shopping-cart";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-} from "src/components/ui/card"
-import Image from 'next/image';
-import { Loader, Trash2 } from 'lucide-react';
-import { cn } from 'src/lib/utils';
-import { Button } from 'src/components/ui/button';
+} from "@/components/ui/card";
+import { Loader, Trash2 } from "lucide-react";
 
-
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 export default function Cart() {
-  const [isChekingOut, setIsChecingkOut] = useState(false);
-  const { cartCount, cartDetails, redirectToCheckout, clearCart, removeItem } = useShoppingCart();
+  const { cartCount, cartDetails, redirectToCheckout } = useShoppingCart();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   async function checkout() {
-    setIsChecingkOut(true);
-
-    const response = await fetch('/api/checkout', {
+    setIsCheckingOut(true);
+    const response = await fetch("/api/checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(cartDetails)
+      body: JSON.stringify(cartDetails),
     });
 
-    console.log('response',response)
+    const { id } = await response.json();
 
-    if (response.ok) {
-      try {
-        const {id}  = await response.json();
-
-        const result = await redirectToCheckout(id);
-        console.log('result', result);
-
-      } catch (error) {
-        console.error("Erro ao fazer o parse da resposta JSON:", error);
-      }
-    } else {
-      console.error("Erro na requisição: ", response.status);
-    }
-    setIsChecingkOut(false);
+    const result = await redirectToCheckout(id);
+    setIsCheckingOut(false);
   }
 
-
   return (
-    <section className="flex flex-col my-2 space-y-2">
+    <section className="container flex flex-col my-2 space-y-2">
       {cartDetails &&
-        Object.keys(cartDetails).map(key => (
+        Object.keys(cartDetails).map((key) => (
           <Card key={key}>
-
             <CardHeader>
-              <CardTitle className='tracking-wider'>
-                {cartDetails[key].name} {' '} ({cartDetails[key].quantity})
+              <CardTitle className="tracking-wider">
+                {cartDetails[key].name} ({cartDetails[key].quantity})
               </CardTitle>
-              <CardDescription className='text-md tracking-wider'>
+              <CardDescription className="text-md tracking-wide">
                 {cartDetails[key].description}
               </CardDescription>
             </CardHeader>
-
-            <CardContent className='grid gap-6'>
-              <div className='flex items-center justify-between space-x-4'>
-                <div className='flex items-center space-x-4'>
-                  <div className='relative w-28 h-28'>
+            <CardContent className="grid gap-6">
+              <div className="flex items-center justify-between space-x-4">
+                <div className="flex items-center space-x-4">
+                  <div className="relative w-28 h-28">
                     <Image
-                      src={cartDetails[key].image ?? ''}
+                      src={cartDetails[key].image || ""}
                       fill
                       alt={cartDetails[key].name}
-                      className='object-contain'
+                      className="object-contain"
                     />
                   </div>
                   <div>
-                    <p className='text-md font-medium leading-none'>Preço</p>
-                    <p className='text-md text-muted-foreground'>
+                    <p className="text-md font-medium leading-none">Preço</p>
+                    <p className="text-md text-muted-foreground">
                       {cartDetails[key].formattedValue}
                     </p>
                   </div>
                 </div>
-                <Trash2
-                  className='text-red-400 hover:text-red-600'
-                  onClick={() => removeItem(cartDetails[key].id)}
-                />
+                <Trash2 className="text-red-400 hover:text-red-600" />
               </div>
             </CardContent>
           </Card>
         ))}
       <div
         className={cn(
-          'flex items-center justify-between',
-          cartCount === undefined || cartCount <= 0 ? 'hidden' : ''
+          "flex items-center justify-end",
+          cartCount === undefined || cartCount <= 0 ? "hidden" : ""
         )}
       >
-        <button
-          onClick={clearCart}
-        >
-          remover todos items
-        </button>
-
         <Button
-          variant={'default'}
-          size={'lg'}
+          variant={"default"}
+          size={"lg"}
           onClick={checkout}
-          disabled={isChekingOut}
+          disabled={isCheckingOut}
         >
-          {isChekingOut ?
-            <div>
-              <Loader className='animate-spin 2s repeat-infinite' />{' '}
+          {isCheckingOut ? (
+            <div className="flex items-center justify-between gap-2">
+              <Loader className="animate-spin 2s repeat-infinite" />{" "}
+              Finalizando...
             </div>
-            :
-            'Finalizar'
-          }
+          ) : (
+            "Finalizar"
+          )}
         </Button>
       </div>
     </section>
-  )
+  );
 }

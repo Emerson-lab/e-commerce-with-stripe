@@ -1,41 +1,38 @@
-import Stripe from 'stripe'
-import stripe from 'src/lib/stripe';
-import { ProductData } from 'src/types';
-import ProductCard from './product-card';
+import stripe from "@/lib/stripe";
+import { Product } from "@/types";
+import Stripe from "stripe";
+import ProductCard from "@/components/shop/product-card";
 
 async function getProducts() {
   try {
-    const stripePorducts = await stripe.products.list({
+    const stripeProducts = await stripe.products.list({
       limit: 9,
-      expand: ['data.default_price'],
-    })
-    return stripePorducts.data.map((product: Stripe.Product): ProductData => {
-      return {
-        id: product.id,
-        name: product.name,
-        description: product.description ?? '',
-        price: (product.default_price as Stripe.Price).unit_amount_decimal ?? '0',
-        currency: (product.default_price as Stripe.Price).currency ?? 'BRL',
-        images: product.images,
-        image: product.images[0]
-      }
-    })
-  } catch (err: any) {
-    console.error('error....>', err.message)
-  }
+      expand: ["data.default_price"],
+    });
 
+    return stripeProducts.data.map((p: Stripe.Product): Product => {
+      return {
+        id: p.id.toString(),
+        name: p.name,
+        description: p.description ?? "",
+        price: (p.default_price as Stripe.Price)?.unit_amount_decimal ?? "0",
+        currency: (p.default_price as Stripe.Price)?.currency ?? "BRL",
+        images: p.images,
+        image: p.images[0],
+      };
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-export default async function ProducList() {
+export default async function ProductList() {
   const products = await getProducts();
-  
   return (
-    <section
-      className='grid gap-4 m-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-    >
-      {products?.map(product => (
-        <ProductCard key={product.name} {...product} />
+    <section className="grid gap-4 m-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {products?.map((p) => (
+        <ProductCard {...p} />
       ))}
     </section>
-  )
+  );
 }

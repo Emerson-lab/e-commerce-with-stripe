@@ -1,9 +1,10 @@
-import ProducList from "src/components/shop/product-list";
+import ProductList from "@/components/shop/product-list";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <section className="container">
-      <ProducList />
+      <ProductList />
     </section>
-  )
+  );
 }

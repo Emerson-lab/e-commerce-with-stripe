@@ -1,7 +1,7 @@
-import Stripe from 'stripe'
+import Stripe from "stripe"
 
-const stripe = new Stripe(process.env.STRIPE_SECRETE_KEY!, {
-  apiVersion: "2023-08-16"
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2022-11-15"
+})
 
 export default stripe
